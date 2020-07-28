@@ -9,13 +9,21 @@ public class Hormiguero {
 	public static final int ALTO = 180;
 	public static final int TAM_CELDA = Lanzador.ANCHO/ANCHO;
 	
-	public static final int ESCALA_NOISE_G = 3;
-	public static final int ESCALA_NOISE_M = 2;
-	public static final int ESCALA_NOISE_P = 1;
-	public static final double IMPORTANCIA_NOISE_G = 1.0;
-	public static final double IMPORTANCIA_NOISE_M = 0.75; 
-	public static final double IMPORTANCIA_NOISE_P = 0.5; 
-	public static final double THRESHOLD_NOISE = 0.5;
+	public static final int ESCALA_TIERRA_G = 3;
+	public static final int ESCALA_TIERRA_M = 2;
+	public static final int ESCALA_TIERRA_P = 1;
+	public static final double IMPORTANCIA_TIERRA_G = 1.0;
+	public static final double IMPORTANCIA_TIERRA_M = 0.75; 
+	public static final double IMPORTANCIA_TIERRA_P = 0.5; 	
+	public static final double THRESHOLD_TIERRA = 0.5;
+	
+	public static final int ESCALA_PIEDRA_G = 8;
+	public static final int ESCALA_PIEDRA_M = 6;
+	public static final int ESCALA_PIEDRA_P = 4;
+	public static final double IMPORTANCIA_PIEDRA_G = 0.5;
+	public static final double IMPORTANCIA_PIEDRA_M = 0.45; 
+	public static final double IMPORTANCIA_PIEDRA_P = 0.4; 	
+	public static final double THRESHOLD_PIEDRA = 0.85;
 	
 	private Casilla[][] grid;
 	private long seed;
@@ -52,13 +60,19 @@ public class Hormiguero {
 		
 		for(int x=0; x<ANCHO; x++) {
 			for(int y=0; y<ALTO; y++) {
-				double ruido = noiseG.noise2(x/ESCALA_NOISE_G, y/ESCALA_NOISE_G) * IMPORTANCIA_NOISE_G;
-				ruido += noiseM.noise2(x/ESCALA_NOISE_M, y/ESCALA_NOISE_M) * IMPORTANCIA_NOISE_M;
-				ruido += noiseP.noise2(x/ESCALA_NOISE_P, y/ESCALA_NOISE_P) * IMPORTANCIA_NOISE_P;
+				double ruidoTierra = noiseG.noise2(x/ESCALA_TIERRA_G, y/ESCALA_TIERRA_G) * IMPORTANCIA_TIERRA_G;
+				ruidoTierra += noiseM.noise2(x/ESCALA_TIERRA_M, y/ESCALA_TIERRA_M) * IMPORTANCIA_TIERRA_M;
+				ruidoTierra += noiseP.noise2(x/ESCALA_TIERRA_P, y/ESCALA_TIERRA_P) * IMPORTANCIA_TIERRA_P;
+				
+				double ruidoPiedra = noiseG.noise2(x/ESCALA_PIEDRA_G, y/ESCALA_PIEDRA_G) * IMPORTANCIA_PIEDRA_G;
+				ruidoPiedra += ruidoPiedra = noiseG.noise2(x/ESCALA_PIEDRA_M, y/ESCALA_PIEDRA_M) * IMPORTANCIA_PIEDRA_M;
+				ruidoPiedra += ruidoPiedra = noiseG.noise2(x/ESCALA_PIEDRA_P, y/ESCALA_PIEDRA_P) * IMPORTANCIA_PIEDRA_P;
 				
 				if(x == 0 || y == 0 || x == ANCHO-1 || y == ALTO-1) {
 					grid[x][y] = Casilla.PIEDRA;
-				} else if(ruido >= THRESHOLD_NOISE) {
+				} else if(ruidoPiedra >= THRESHOLD_PIEDRA) {
+					grid[x][y] = Casilla.PIEDRA;
+				} else if(ruidoTierra >= THRESHOLD_TIERRA) {
 					grid[x][y] = Casilla.TIERRA_SECA;
 				} else {
 					grid[x][y] = Casilla.TIERRA;
