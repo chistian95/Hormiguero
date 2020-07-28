@@ -1,6 +1,9 @@
 package es.chistian95.hormiguero;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import es.chistian95.hormiguero.utils.OpenSimplex2F;
 
@@ -9,6 +12,9 @@ public class Hormiguero {
 	public static final int ALTO = 180;
 	public static final int TAM_CELDA = Lanzador.ANCHO/ANCHO;
 	public static final int ALTURA_HORMIGUERO = 80;
+	
+	public static final double THRESHOLD_PLANTAS = 0.85;
+	public static final double TICKRATE_PLANTAS = 0.002;
 	
 	public static final int ESCALA_TIERRA_G = 3;
 	public static final int ESCALA_TIERRA_M = 2;
@@ -26,11 +32,15 @@ public class Hormiguero {
 	public static final double IMPORTANCIA_PIEDRA_P = 0.4; 	
 	public static final double THRESHOLD_PIEDRA = 0.85;
 	
+	private Random rng;
 	private Casilla[][] grid;
+	private List<Planta> plantas;
 	private long seed;
+	OpenSimplex2F noise;
 	
 	public Hormiguero(long seed) {
 		this.seed = seed;
+		rng = new Random(seed);
 		
 		generarMundo();
 	}
@@ -46,16 +56,24 @@ public class Hormiguero {
 				cas.render(g, dx, dy, TAM_CELDA);
 			}
 		}
+		
+		for(Planta planta : plantas) {
+			planta.render(g);
+		}
 	}
 	
-	public void update() {
-		
+	public void update() {				
+		for(Planta planta : plantas) {
+			if(rng.nextDouble() < TICKRATE_PLANTAS) {
+				planta.tick();
+			}
+		}
 	}
 	
 	private void generarMundo() {
 		grid = new Casilla[ANCHO][ALTO];		
 		
-		OpenSimplex2F noise = new OpenSimplex2F(this.seed);
+		noise = new OpenSimplex2F(this.seed);
 		
 		for(int x=0; x<ANCHO; x++) {
 			for(int y=0; y<ALTO; y++) {
@@ -84,9 +102,23 @@ public class Hormiguero {
 				}
 			}
 		}
+		
+		plantas = new ArrayList<Planta>();
+		
+		for(int x=0; x<ANCHO; x++) {
+			int y = ALTURA_HORMIGUERO-1;
+			
+			if(noise.noise2(x, y) > THRESHOLD_PLANTAS) {
+				plantas.add(new Planta(x, y));
+			}
+		}
 	}
 	
 	public Casilla[][] getGrid() {
 		return grid;
+	}
+	
+	public long getSeed() {
+		return seed;
 	}
 }
