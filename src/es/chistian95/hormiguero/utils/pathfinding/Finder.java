@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 import es.chistian95.hormiguero.Casilla;
+import es.chistian95.hormiguero.Hormiguero;
 
 public class Finder {
 	public static List<Integer[]> buscar(int[] src, int[] dest, Casilla[][] mapa) {
@@ -55,7 +56,7 @@ public class Finder {
 					q.add(grid[x+1][y]);
 				}
 			}
-			if((y - 1 >= 0) && x < mapa.length && !grid[x][y-1].isVisitado() && grid[x][y-1].getCoste() >= 0) {
+			if((y - 1 > Hormiguero.ALTURA_HORMIGUERO-2) && x < mapa.length && !grid[x][y-1].isVisitado() && grid[x][y-1].getCoste() >= 0) {
 				int nuevoCoste = grid[x][y].getCosteSrc() + grid[x][y-1].getCoste();
 				if(nuevoCoste < grid[x][y-1].getCosteSrc() || grid[x][y-1].getCosteSrc() < 0) {
 					grid[x][y-1].setCosteSrc(nuevoCoste);
@@ -79,10 +80,13 @@ public class Finder {
 	}
 	
 	private static Nodo[][] casillaToNodo(Casilla[][] mapa) {
-		Nodo[][] grid = new Nodo[mapa.length][mapa[0].length];
+		int ancho = Hormiguero.ANCHO;
+		int alto = Hormiguero.ALTO;
 		
-		for(int x=0,lenX=mapa.length; x<lenX; x++) {
-			for(int y=0,lenY=mapa[x].length; y<lenY; y++) {
+		Nodo[][] grid = new Nodo[ancho][alto];
+		
+		for(int x=0,lenX=ancho; x<lenX; x++) {
+			for(int y=0,lenY=alto; y<lenY; y++) {
 				grid[x][y] = new Nodo(x, y, mapa[x][y].getPeso());
 			}
 		}

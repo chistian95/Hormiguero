@@ -64,4 +64,12 @@ public class Planta {
 		
 		g.fillRect(dx, dy, tam, tam);
 	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
 }

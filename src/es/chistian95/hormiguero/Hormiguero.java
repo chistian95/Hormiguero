@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import es.chistian95.hormiguero.edificios.EdificioAlmacen;
+import es.chistian95.hormiguero.edificios.EdificioCuna;
+import es.chistian95.hormiguero.hormigas.Hormiga;
+import es.chistian95.hormiguero.hormigas.HormigaExploradora;
+import es.chistian95.hormiguero.hormigas.HormigaObrera;
 import es.chistian95.hormiguero.utils.OpenSimplex2F;
 
 public class Hormiguero {
 	public static final int ANCHO = 320;
 	public static final int ALTO = 180;
 	public static final int TAM_CELDA = Lanzador.ANCHO/ANCHO;
-	public static final int ALTURA_HORMIGUERO = 80;
+	public static final int ALTURA_HORMIGUERO = 20;
+	public static final int TAM_CUEVAS = 6;
 	
 	public static final double THRESHOLD_PLANTAS = 0.85;
 	public static final double TICKRATE_PLANTAS = 0.002;
@@ -35,14 +41,29 @@ public class Hormiguero {
 	private Random rng;
 	private Casilla[][] grid;
 	private List<Planta> plantas;
+	private List<Hormiga> hormigas;
 	private long seed;
 	OpenSimplex2F noise;
+	
+	private int centroX;
+	private int centroY;
+	
+	private List<EdificioAlmacen> almacenes;
+	private List<EdificioCuna> cunas;
 	
 	public Hormiguero(long seed) {
 		this.seed = seed;
 		rng = new Random(seed);
 		
 		generarMundo();
+		
+		hormigas = new ArrayList<Hormiga>();
+		
+		hormigas.add(new HormigaObrera(this, centroX, centroY));
+		hormigas.add(new HormigaExploradora(this, centroX, centroY));
+		
+		almacenes = new ArrayList<EdificioAlmacen>();
+		cunas = new ArrayList<EdificioCuna>();
 	}
 	
 	public void render(Graphics2D g) {
@@ -60,6 +81,18 @@ public class Hormiguero {
 		for(Planta planta : plantas) {
 			planta.render(g);
 		}
+		
+		for(EdificioAlmacen edificio : almacenes) {
+			edificio.render(g);
+		}
+		
+		for(EdificioCuna edificio : cunas) {
+			edificio.render(g);
+		}
+		
+		for(Hormiga hormiga : hormigas) {
+			hormiga.render(g);
+		}
 	}
 	
 	public void update() {				
@@ -67,6 +100,10 @@ public class Hormiguero {
 			if(rng.nextDouble() < TICKRATE_PLANTAS) {
 				planta.tick();
 			}
+		}
+		
+		for(Hormiga hormiga : hormigas) {
+			hormiga.tick();
 		}
 	}
 	
@@ -112,6 +149,26 @@ public class Hormiguero {
 				plantas.add(new Planta(x, y));
 			}
 		}
+		
+		centroX = ANCHO/2;
+		centroY = (ALTO-ALTURA_HORMIGUERO)/2 + ALTURA_HORMIGUERO;
+		
+		crearCueva(centroX, centroY);
+	}
+	
+	public void crearCueva(int x, int y) {
+		int radio = TAM_CUEVAS;
+		
+		for(int dy=-radio; dy<=radio; dy++) {
+			for(int dx=-radio; dx<=radio; dx++) {
+				if(dx*dx + dy*dy <= radio*radio) {
+					if(dx+x < 0 || dy+y < 0 || dx+x >= ANCHO || dy+y >= ALTO) {
+						continue;
+					}
+					grid[dx+x][dy+y] = Casilla.CAMINO;
+				}
+			}
+		}
 	}
 	
 	public Casilla[][] getGrid() {
@@ -120,5 +177,25 @@ public class Hormiguero {
 	
 	public long getSeed() {
 		return seed;
+	}
+	
+	public int getCentroX() {
+		return centroX;
+	}
+	
+	public int getCentroY() {
+		return centroY;
+	}
+	
+	public List<Planta> getPlantas() {
+		return plantas;
+	}
+	
+	public List<EdificioAlmacen> getAlmacenes() {
+		return almacenes;
+	}
+	
+	public List<EdificioCuna> getCunas() {
+		return cunas;
 	}
 }
