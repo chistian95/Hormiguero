@@ -25,6 +25,16 @@ public enum Casilla {
 		g.setColor(Utils.hexToColor("#D7CCC8"));
 		
 		g.fillRect(x, y, ancho, ancho);
+	}),
+	AIRE(5, (g, x, y, ancho) -> {
+		g.setColor(Utils.hexToColor("#2196F3"));
+		
+		g.fillRect(x, y, ancho, ancho);
+	}),
+	HIERBA(200, (g, x, y, ancho) -> {
+		g.setColor(Utils.hexToColor("#4CAF50"));
+		
+		g.fillRect(x, y, ancho, ancho);
 	});
 	
 	private int peso;
