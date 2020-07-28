@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,8 +20,12 @@ public class Lanzador implements Runnable {
 	Canvas canvas;
 	BufferStrategy bfs;
 	
-	public Lanzador() {		
+	private Hormiguero hormiguero;
+	
+	public Lanzador(long seed) {		
 		frame = new JFrame("Hormiguero");
+		
+		hormiguero = new Hormiguero(seed);
 		
 		JPanel panel = (JPanel) frame.getContentPane();
 		panel.setPreferredSize(new Dimension(ANCHO, ALTO));
@@ -74,15 +79,26 @@ public class Lanzador implements Runnable {
 	}
 	
 	protected void render(Graphics2D g) {
-		
+		hormiguero.render(g);
 	}
 	
 	protected void update() {		
-		
+		hormiguero.update();
 	}
 	
 	public static void main(String[] args) {
-		Lanzador ex = new Lanzador();
+		Random rng = new Random();
+		long seed = rng.nextLong();
+		
+		if(args.length > 0) {
+			try {
+				seed = Long.parseLong(args[0]);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Lanzador ex = new Lanzador(seed);
 		new Thread(ex).start();
 	}
 }
