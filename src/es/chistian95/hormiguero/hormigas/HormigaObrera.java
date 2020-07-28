@@ -113,6 +113,10 @@ public class HormigaObrera extends Hormiga {
 			boolean libre = true;
 			for(int px = dx-Hormiguero.TAM_CUEVAS; px < dx+Hormiguero.TAM_CUEVAS && libre; px++) {
 				for(int py = dy-Hormiguero.TAM_CUEVAS; py < dy+Hormiguero.TAM_CUEVAS && libre; py++) {
+					if(px < 0 || py < 0 || px >= Hormiguero.ANCHO || py >= Hormiguero.ALTO) {
+						continue;
+					}
+					
 					if(hormiguero.getGrid()[px][py] == Casilla.CAMINO) {
 						libre = false;
 						break;
@@ -139,6 +143,10 @@ public class HormigaObrera extends Hormiga {
 			boolean libre = true;
 			for(int px = dx-Hormiguero.TAM_CUEVAS; px < dx+Hormiguero.TAM_CUEVAS && libre; px++) {
 				for(int py = dy-Hormiguero.TAM_CUEVAS; py < dy+Hormiguero.TAM_CUEVAS && libre; py++) {
+					if(px < 0 || py < 0 || px >= Hormiguero.ANCHO || py >= Hormiguero.ALTO) {
+						continue;
+					}
+					
 					if(hormiguero.getGrid()[px][py] == Casilla.CAMINO) {
 						libre = false;
 						break;
