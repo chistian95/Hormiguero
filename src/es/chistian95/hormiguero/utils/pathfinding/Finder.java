@@ -47,7 +47,7 @@ public class Finder {
 					q.add(grid[x-1][y]);
 				}
 			}
-			if((x + 1 < mapa.length) && y < mapa.length && !grid[x+1][y].isVisitado() && grid[x+1][y].getCoste() >= 0) {
+			if((x + 1 < mapa.length-1) && y < mapa.length && !grid[x+1][y].isVisitado() && grid[x+1][y].getCoste() >= 0) {
 				int nuevoCoste = grid[x][y].getCosteSrc() + grid[x+1][y].getCoste();
 				if(nuevoCoste < grid[x+1][y].getCosteSrc() || grid[x+1][y].getCosteSrc() < 0) {
 					grid[x+1][y].setCosteSrc(nuevoCoste);
@@ -65,7 +65,7 @@ public class Finder {
 					q.add(grid[x][y-1]);
 				}
 			}
-			if((y + 1 < mapa.length) && x < mapa.length && !grid[x][y+1].isVisitado() && grid[x][y+1].getCoste() >= 0) {
+			if((y + 1 < mapa.length-1) && x < mapa.length && !grid[x][y+1].isVisitado() && grid[x][y+1].getCoste() >= 0) {
 				int nuevoCoste = grid[x][y].getCosteSrc() + grid[x][y+1].getCoste();
 				if(nuevoCoste < grid[x][y+1].getCosteSrc() || grid[x][y+1].getCosteSrc() < 0) {
 					grid[x][y+1].setCosteSrc(nuevoCoste);

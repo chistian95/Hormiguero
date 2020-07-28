@@ -19,6 +19,12 @@ public class Hormiguero {
 	public static final int ALTURA_HORMIGUERO = 20;
 	public static final int TAM_CUEVAS = 6;
 	
+	public static final int VELOCIDAD_HORMIGAS = 2;
+	public static final int HAMBRE_HORMIGAS = 200;
+	public static final int GANAS_PONCHAR = 800;
+	public static final int VELOCIDAD_HUEVOS = 5000;
+	public static final double RATE_EXPLORADORAS = 0.8;
+	
 	public static final double THRESHOLD_PLANTAS = 0.85;
 	public static final double TICKRATE_PLANTAS = 0.002;
 	
@@ -44,6 +50,7 @@ public class Hormiguero {
 	private List<Hormiga> hormigas;
 	private long seed;
 	OpenSimplex2F noise;
+	private long tickJuego;
 	
 	private int centroX;
 	private int centroY;
@@ -95,15 +102,33 @@ public class Hormiguero {
 		}
 	}
 	
-	public void update() {				
+	public void update() {		
+		tickJuego += 1;
+		
 		for(Planta planta : plantas) {
 			if(rng.nextDouble() < TICKRATE_PLANTAS) {
 				planta.tick();
 			}
 		}
 		
-		for(Hormiga hormiga : hormigas) {
-			hormiga.tick();
+		if(tickJuego % VELOCIDAD_HORMIGAS == 0) {
+			for(Hormiga hormiga : hormigas) {
+				hormiga.tick();
+			}
+		}
+		
+		if(tickJuego % VELOCIDAD_HUEVOS == 0) {
+			for(EdificioCuna cuna : cunas) {
+				if(cuna.tieneBebes()) {
+					cuna.sacarBebes();
+					
+					if(rng.nextDouble() < RATE_EXPLORADORAS) {
+						hormigas.add(new HormigaExploradora(this, cuna.getX(), cuna.getY()));
+					} else {
+						hormigas.add(new HormigaObrera(this, cuna.getX(), cuna.getY()));
+					}
+				}
+			}
 		}
 	}
 	

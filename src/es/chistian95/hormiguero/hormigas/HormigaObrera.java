@@ -41,11 +41,37 @@ public class HormigaObrera extends Hormiga {
 
 	@Override
 	public void tick() {
+		tickHormiga += 1;
+		if(tickHormiga%Hormiguero.HAMBRE_HORMIGAS == 0) {
+			hambre += 1;
+		}
+		
 		if(objetivo == null || objetivo.size() == 0) {
 			if(edificio != null) {
-				hormiguero.crearCueva(edificio.getX(), edificio.getY());
-				edificio.setTerminado(true);
-				edificio = null;
+				if(hambre >= 10 && edificio instanceof EdificioAlmacen) {
+					EdificioAlmacen almacen = (EdificioAlmacen) edificio;
+					
+					if(almacen.tieneComida()) {
+						almacen.sacarComida();
+						hambre = Math.max(0, hambre-10);
+					}
+					
+					edificio = null;
+				} else if(ponchando && edificio != null && edificio instanceof EdificioCuna) {
+					EdificioCuna cuna = (EdificioCuna) edificio;
+					
+					if(!cuna.isLleno()) {
+						ponchando = false;
+						tickPonchar = 0;
+						cuna.meterBebes();
+					}
+					
+					edificio = null;
+				} else if(!edificio.isTerminado() && edificio.getX() == this.x && edificio.getY() == this.y) {
+					hormiguero.crearCueva(edificio.getX(), edificio.getY());
+					edificio.setTerminado(true);
+					edificio = null;
+				}
 			}
 			
 			buscarObjetivo();
@@ -64,6 +90,27 @@ public class HormigaObrera extends Hormiga {
 	}
 	
 	private void buscarObjetivo() {
+		if(hambre >= 10) {
+			EdificioAlmacen target = null;
+			
+			for(EdificioAlmacen almacen : hormiguero.getAlmacenes()) {
+				if(almacen.tieneComida()) {
+					target = almacen;
+					break;
+				}
+			}
+			
+			if(target != null) {
+				int dx = target.getX();
+				int dy = target.getY();
+				
+				edificio = target;
+				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
+				
+				return;
+			}
+		}
+		
 		boolean hacerAlmacen = true;
 		
 		for(EdificioAlmacen almacen : hormiguero.getAlmacenes()) {
@@ -92,10 +139,32 @@ public class HormigaObrera extends Hormiga {
 			return;
 		}
 		
+		if(tickPonchar >= Hormiguero.GANAS_PONCHAR && !ponchando) {
+			EdificioCuna target = null;
+			for(EdificioCuna cuna : hormiguero.getCunas()) {
+				if(cuna.isTerminado() && !cuna.isLleno()) {
+					target = cuna;
+					break;
+				}
+			}
+			
+			if(target != null) {
+				int dx = target.getX();
+				int dy = target.getY();
+				
+				ponchando = true;
+				edificio = target;
+				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
+			}
+			
+			return;
+		}
+		
 		int dx = hormiguero.getCentroX();
 		int dy = hormiguero.getCentroY();
 		
 		if(this.x == dx && this.y == dy) {
+			tickPonchar += 1;
 			return;
 		}
 		

@@ -9,6 +9,7 @@ import es.chistian95.hormiguero.Hormiguero;
 import es.chistian95.hormiguero.Planta;
 import es.chistian95.hormiguero.edificios.Edificio;
 import es.chistian95.hormiguero.edificios.EdificioAlmacen;
+import es.chistian95.hormiguero.edificios.EdificioCuna;
 import es.chistian95.hormiguero.utils.Utils;
 import es.chistian95.hormiguero.utils.pathfinding.Finder;
 
@@ -42,8 +43,23 @@ public class HormigaExploradora extends Hormiga {
 
 	@Override
 	public void tick() {
+		tickHormiga += 1;
+		if(tickHormiga%Hormiguero.HAMBRE_HORMIGAS == 0) {
+			hambre += 1;
+		}
+		
 		if(objetivo == null || objetivo.size() == 0) {
-			if(comida && edificio != null && edificio instanceof EdificioAlmacen) {
+			if(hambre >= 10 && edificio != null && edificio instanceof EdificioAlmacen) {
+				EdificioAlmacen almacen = (EdificioAlmacen) edificio;
+				
+				if(almacen.tieneComida()) {
+					almacen.sacarComida();
+					
+					hambre = Math.max(0, hambre-10);
+				}
+				
+				edificio = null;
+			} else if(comida && edificio != null && edificio instanceof EdificioAlmacen) {
 				EdificioAlmacen almacen = (EdificioAlmacen) edificio;
 				
 				if(!almacen.isLleno()) {
@@ -59,6 +75,16 @@ public class HormigaExploradora extends Hormiga {
 				}
 				
 				planta = null;
+			} else if(ponchando && edificio != null && edificio instanceof EdificioCuna) {
+				EdificioCuna cuna = (EdificioCuna) edificio;
+				
+				if(!cuna.isLleno()) {
+					ponchando = false;
+					tickPonchar = 0;
+					cuna.meterBebes();
+				}
+				
+				edificio = null;
 			}
 			
 			buscarObjetivo();
@@ -77,6 +103,27 @@ public class HormigaExploradora extends Hormiga {
 	}
 	
 	private void buscarObjetivo() {
+		if(hambre >= 10) {
+			EdificioAlmacen target = null;
+			
+			for(EdificioAlmacen almacen : hormiguero.getAlmacenes()) {
+				if(almacen.tieneComida()) {
+					target = almacen;
+					break;
+				}
+			}
+			
+			if(target != null) {
+				int dx = target.getX();
+				int dy = target.getY();
+				
+				edificio = target;
+				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
+				
+				return;
+			}
+		}
+		
 		if(comida) {
 			EdificioAlmacen target = null;
 			
@@ -119,10 +166,32 @@ public class HormigaExploradora extends Hormiga {
 			}
 		}
 		
+		if(tickPonchar >= Hormiguero.GANAS_PONCHAR && !ponchando) {
+			EdificioCuna target = null;
+			for(EdificioCuna cuna : hormiguero.getCunas()) {
+				if(cuna.isTerminado() && !cuna.isLleno()) {
+					target = cuna;
+					break;
+				}
+			}
+			
+			if(target != null) {
+				int dx = target.getX();
+				int dy = target.getY();
+				
+				ponchando = true;
+				edificio = target;
+				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
+			}
+			
+			return;
+		}
+		
 		int dx = hormiguero.getCentroX();
 		int dy = hormiguero.getCentroY();
 		
 		if(this.x == dx && this.y == dy) {
+			tickPonchar += 1;
 			return;
 		}
 		
