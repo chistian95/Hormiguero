@@ -114,7 +114,11 @@ public class HormigaObrera extends Hormiga {
 		boolean hacerAlmacen = true;
 		
 		for(EdificioAlmacen almacen : hormiguero.getAlmacenes()) {
-			if(!almacen.isLleno()) {
+			if(!almacen.isTerminado()) {
+				hacerAlmacen = false;
+				break;
+			}
+			if(almacen.isTerminado() && !almacen.isLleno()) {
 				hacerAlmacen = false;
 				break;
 			}
