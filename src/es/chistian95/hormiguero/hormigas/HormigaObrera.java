@@ -185,8 +185,8 @@ public class HormigaObrera extends Hormiga {
 		while(edificio == null) {
 			int altura = Hormiguero.ALTURA_HORMIGUERO + Hormiguero.TAM_CUEVAS*2;
 			
-			int dx = rng.nextInt(Hormiguero.ANCHO);
-			int dy = rng.nextInt(Hormiguero.ALTO - altura) + altura;
+			int dx = rng.nextInt(Hormiguero.ANCHO - Hormiguero.TAM_CUEVAS) + Hormiguero.TAM_CUEVAS;
+			int dy = rng.nextInt(Hormiguero.ALTO - altura - Hormiguero.TAM_CUEVAS) + altura + Hormiguero.TAM_CUEVAS;
 			
 			boolean libre = true;
 			for(int px = dx-Hormiguero.TAM_CUEVAS; px < dx+Hormiguero.TAM_CUEVAS && libre; px++) {
@@ -215,8 +215,8 @@ public class HormigaObrera extends Hormiga {
 		while(edificio == null) {
 			int altura = Hormiguero.ALTURA_HORMIGUERO + Hormiguero.TAM_CUEVAS*2;
 			
-			int dx = rng.nextInt(Hormiguero.ANCHO);
-			int dy = rng.nextInt(Hormiguero.ALTO - altura) + altura;
+			int dx = rng.nextInt(Hormiguero.ANCHO - Hormiguero.TAM_CUEVAS) + Hormiguero.TAM_CUEVAS;
+			int dy = rng.nextInt(Hormiguero.ALTO - altura - Hormiguero.TAM_CUEVAS) + altura + Hormiguero.TAM_CUEVAS;
 			
 			boolean libre = true;
 			for(int px = dx-Hormiguero.TAM_CUEVAS; px < dx+Hormiguero.TAM_CUEVAS && libre; px++) {

@@ -6,12 +6,12 @@ import es.chistian95.hormiguero.utils.Utils;
 import es.chistian95.hormiguero.utils.Utils.Consumer4;
 
 public enum Casilla {
-	TIERRA(10, (g, x, y, ancho) -> {
+	TIERRA(5, (g, x, y, ancho) -> {
 		g.setColor(Utils.hexToColor("#795548"));
 		
 		g.fillRect(x, y, ancho, ancho);
 	}),
-	TIERRA_SECA(20, (g, x, y, ancho) -> {
+	TIERRA_SECA(10, (g, x, y, ancho) -> {
 		g.setColor(Utils.hexToColor("#5D4037"));
 		
 		g.fillRect(x, y, ancho, ancho);
@@ -26,7 +26,7 @@ public enum Casilla {
 		
 		g.fillRect(x, y, ancho, ancho);
 	}),
-	AIRE(5, (g, x, y, ancho) -> {
+	AIRE(2, (g, x, y, ancho) -> {
 		g.setColor(Utils.hexToColor("#2196F3"));
 		
 		g.fillRect(x, y, ancho, ancho);
