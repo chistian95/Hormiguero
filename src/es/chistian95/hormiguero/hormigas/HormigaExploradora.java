@@ -87,7 +87,7 @@ public class HormigaExploradora extends Hormiga {
 				if(!cuna.isLleno()) {
 					ponchando = false;
 					tickPonchar = 0;
-					cuna.meterBebes();
+					cuna.meterBebe();
 				}
 				
 				edificio = null;

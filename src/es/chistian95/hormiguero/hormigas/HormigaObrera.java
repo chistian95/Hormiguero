@@ -68,7 +68,7 @@ public class HormigaObrera extends Hormiga {
 					if(!cuna.isLleno()) {
 						ponchando = false;
 						tickPonchar = 0;
-						cuna.meterBebes();
+						cuna.meterBebe();
 					}
 					
 					edificio = null;
@@ -203,7 +203,7 @@ public class HormigaObrera extends Hormiga {
 			}
 			
 			if(libre) {
-				edificio = new EdificioAlmacen(dx, dy);
+				edificio = new EdificioAlmacen(this.hormiguero, dx, dy);
 				hormiguero.getAlmacenes().add((EdificioAlmacen) edificio);
 				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
 			}
@@ -233,7 +233,7 @@ public class HormigaObrera extends Hormiga {
 			}
 			
 			if(libre) {
-				edificio = new EdificioCuna(dx, dy);
+				edificio = new EdificioCuna(this.hormiguero, dx, dy);
 				hormiguero.getCunas().add((EdificioCuna) edificio);
 				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
 			}

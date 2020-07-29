@@ -8,7 +8,8 @@ import es.chistian95.hormiguero.utils.Utils;
 public class EdificioAlmacen extends Edificio {
 	private int comida;
 	
-	public EdificioAlmacen(int x, int y) {
+	public EdificioAlmacen(Hormiguero hormiguero, int x, int y) {
+		this.hormiguero = hormiguero;
 		this.x = x;
 		this.y = y;
 		this.comida = 0;

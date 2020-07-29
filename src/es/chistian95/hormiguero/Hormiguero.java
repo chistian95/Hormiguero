@@ -126,17 +126,9 @@ public class Hormiguero {
 			}
 		}
 		
-		if(tickJuego % VELOCIDAD_HUEVOS == 0) {
-			for(EdificioCuna cuna : cunas) {
-				if(cuna.tieneBebes()) {
-					cuna.sacarBebes();
-					
-					if(rng.nextDouble() < RATE_EXPLORADORAS) {
-						hormigas.add(new HormigaExploradora(this, cuna.getX(), cuna.getY()));
-					} else {
-						hormigas.add(new HormigaObrera(this, cuna.getX(), cuna.getY()));
-					}
-				}
+		for(EdificioCuna cuna : cunas) {
+			if(cuna.tieneBebes()) {
+				cuna.tick();
 			}
 		}
 	}
@@ -231,5 +223,9 @@ public class Hormiguero {
 	
 	public List<EdificioCuna> getCunas() {
 		return cunas;
+	}
+	
+	public List<Hormiga> getHormigas() {
+		return hormigas;
 	}
 }
