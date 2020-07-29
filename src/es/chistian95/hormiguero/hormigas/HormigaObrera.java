@@ -44,6 +44,11 @@ public class HormigaObrera extends Hormiga {
 		tickHormiga += 1;
 		if(tickHormiga%Hormiguero.HAMBRE_HORMIGAS == 0) {
 			hambre += 1;
+			
+			if(hambre >= Hormiguero.LIMITE_HAMBRE) {
+				muerta = true;
+				return;
+			}
 		}
 		
 		if(objetivo == null || objetivo.size() == 0) {

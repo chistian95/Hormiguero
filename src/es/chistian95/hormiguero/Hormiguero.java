@@ -2,6 +2,7 @@ package es.chistian95.hormiguero;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -21,6 +22,7 @@ public class Hormiguero {
 	
 	public static final int VELOCIDAD_HORMIGAS = 2;
 	public static final int HAMBRE_HORMIGAS = 200;
+	public static final int LIMITE_HAMBRE = 50;
 	public static final int GANAS_PONCHAR = 1400;
 	public static final int VELOCIDAD_HUEVOS = 3500;
 	public static final double RATE_EXPLORADORAS = 0.8;
@@ -112,8 +114,15 @@ public class Hormiguero {
 		}
 		
 		if(tickJuego % VELOCIDAD_HORMIGAS == 0) {
-			for(Hormiga hormiga : hormigas) {
+			Iterator<Hormiga> itHormiga = hormigas.iterator();
+			while(itHormiga.hasNext()) {
+				Hormiga hormiga = itHormiga.next();
+				
 				hormiga.tick();
+				
+				if(hormiga.isMuerta()) {
+					itHormiga.remove();
+				}
 			}
 		}
 		
