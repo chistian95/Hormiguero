@@ -73,6 +73,9 @@ public class Hormiguero {
 		
 		hormigas.add(new HormigaObrera(this, centroX, centroY));
 		hormigas.add(new HormigaExploradora(this, centroX, centroY));
+		hormigas.add(new HormigaExploradora(this, centroX, centroY));
+		hormigas.add(new HormigaExploradora(this, centroX, centroY));
+		hormigas.add(new HormigaExploradora(this, centroX, centroY));
 		
 		almacenes = new ArrayList<EdificioAlmacen>();
 		cunas = new ArrayList<EdificioCuna>();
