@@ -54,8 +54,17 @@ public class Lanzador implements Runnable {
 		while(true) {
 			long loopInicio = System.currentTimeMillis();
 			
-			update();
-			render();
+			try {
+				update();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				render();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			
 			long loopFinal = System.currentTimeMillis();
 			long loopDelta = loopFinal - loopInicio;
