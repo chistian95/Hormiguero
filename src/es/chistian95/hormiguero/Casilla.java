@@ -31,7 +31,7 @@ public enum Casilla {
 		
 		g.fillRect(x, y, ancho, ancho);
 	}),
-	HIERBA(75, (g, x, y, ancho) -> {
+	HIERBA(25, (g, x, y, ancho) -> {
 		g.setColor(Utils.hexToColor("#4CAF50"));
 		
 		g.fillRect(x, y, ancho, ancho);

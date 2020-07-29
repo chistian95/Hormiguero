@@ -22,7 +22,7 @@ public class Hormiguero {
 	public static final int TAM_CUEVAS = 6;
 	
 	public static final int VELOCIDAD_HORMIGAS = 2;
-	public static final int HAMBRE_HORMIGAS = 200;
+	public static final int HAMBRE_HORMIGAS = 150;
 	public static final int LIMITE_HAMBRE = 30;
 	public static final int GANAS_PONCHAR = 1400;
 	public static final int VELOCIDAD_HUEVOS = 3500;
