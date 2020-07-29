@@ -180,7 +180,7 @@ public class HormigaExploradora extends Hormiga {
 				return Double.compare(distA, distB);
 			}).findFirst();
 			
-			if(target != null) {
+			if(target.isPresent()) {
 				int dx = target.get().getX();
 				int dy = target.get().getY();
 				

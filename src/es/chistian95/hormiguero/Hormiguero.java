@@ -1,5 +1,6 @@
 package es.chistian95.hormiguero;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,10 +23,10 @@ public class Hormiguero {
 	
 	public static final int VELOCIDAD_HORMIGAS = 2;
 	public static final int HAMBRE_HORMIGAS = 200;
-	public static final int LIMITE_HAMBRE = 50;
+	public static final int LIMITE_HAMBRE = 30;
 	public static final int GANAS_PONCHAR = 1400;
 	public static final int VELOCIDAD_HUEVOS = 3500;
-	public static final double RATE_EXPLORADORAS = 0.8;
+	public static final double RATE_EXPLORADORAS = 0.9;
 	
 	public static final double THRESHOLD_PLANTAS = 0.85;
 	public static final double TICKRATE_PLANTAS = 0.002;
@@ -54,6 +55,8 @@ public class Hormiguero {
 	OpenSimplex2F noise;
 	private long tickJuego;
 	
+	private int muertas;
+	
 	private int centroX;
 	private int centroY;
 	
@@ -73,6 +76,8 @@ public class Hormiguero {
 		
 		almacenes = new ArrayList<EdificioAlmacen>();
 		cunas = new ArrayList<EdificioCuna>();
+		
+		muertas = 0;
 	}
 	
 	public void render(Graphics2D g) {
@@ -102,6 +107,21 @@ public class Hormiguero {
 		for(Hormiga hormiga : hormigas) {
 			hormiga.render(g);
 		}
+		
+		int nTotal = hormigas.size();
+		int nObreras = (int) hormigas.stream().filter(h -> h instanceof HormigaObrera).count();
+		int nExploradoras = (int) hormigas.stream().filter(h -> h instanceof HormigaExploradora).count();		
+		int nComida = almacenes.stream().mapToInt(al -> al.getComida()).sum();
+		int nHuevos = cunas.stream().mapToInt(cu -> cu.getBebes()).sum();
+		
+		g.setColor(Color.WHITE);
+		
+		g.drawString("Hormigas: "+nTotal, 12, 18);
+		g.drawString("Obreras: "+nObreras, 12, 30);
+		g.drawString("Exploradoras: "+nExploradoras, 12, 42);
+		g.drawString("Muertas: "+muertas, 12, 54);		
+		g.drawString("Comida: "+nComida, 12, 66);
+		g.drawString("Huevos: "+nHuevos, 12, 78);
 	}
 	
 	public void update() {		
@@ -122,6 +142,7 @@ public class Hormiguero {
 				
 				if(hormiga.isMuerta()) {
 					itHormiga.remove();
+					muertas += 1;
 				}
 			}
 		}
