@@ -21,8 +21,8 @@ public class Hormiguero {
 	
 	public static final int VELOCIDAD_HORMIGAS = 2;
 	public static final int HAMBRE_HORMIGAS = 200;
-	public static final int GANAS_PONCHAR = 800;
-	public static final int VELOCIDAD_HUEVOS = 5000;
+	public static final int GANAS_PONCHAR = 1400;
+	public static final int VELOCIDAD_HUEVOS = 3500;
 	public static final double RATE_EXPLORADORAS = 0.8;
 	
 	public static final double THRESHOLD_PLANTAS = 0.85;
