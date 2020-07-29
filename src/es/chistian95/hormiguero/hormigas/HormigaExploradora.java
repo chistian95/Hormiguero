@@ -3,6 +3,7 @@ package es.chistian95.hormiguero.hormigas;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Optional;
 
 import es.chistian95.hormiguero.Casilla;
 import es.chistian95.hormiguero.Hormiguero;
@@ -145,21 +146,19 @@ public class HormigaExploradora extends Hormiga {
 			return;
 		}
 		
-		if(!comida) {
-			Planta target = null;
-			
-			for(Planta planta : hormiguero.getPlantas()) {
-				if(planta.hasFruta()) {
-					target = planta;
-					break;
-				}
-			}
-			
-			if(target != null) {
-				int dx = target.getX();
-				int dy = target.getY();
+		if(!comida) {			
+			Optional<Planta> target = hormiguero.getPlantas().stream().filter(p -> p.hasFruta()).sorted((a,b) -> {
+				double distA = (a.getX()-this.x)*(a.getX()-this.x) + (a.getY()-this.y)*(a.getY()-this.y);
+				double distB = (b.getX()-this.x)*(b.getX()-this.x) + (b.getY()-this.y)*(b.getY()-this.y);
 				
-				planta = target;
+				return Double.compare(distA, distB);
+			}).findFirst();
+			
+			if(target.isPresent()) {
+				int dx = target.get().getX();
+				int dy = target.get().getY();
+				
+				planta = target.get();
 				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
 				
 				return;
