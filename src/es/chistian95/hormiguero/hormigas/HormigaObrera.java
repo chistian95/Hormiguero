@@ -3,6 +3,7 @@ package es.chistian95.hormiguero.hormigas;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import es.chistian95.hormiguero.Casilla;
@@ -96,20 +97,20 @@ public class HormigaObrera extends Hormiga {
 	
 	private void buscarObjetivo() {
 		if(hambre >= 10) {
-			EdificioAlmacen target = null;
-			
-			for(EdificioAlmacen almacen : hormiguero.getAlmacenes()) {
-				if(almacen.tieneComida()) {
-					target = almacen;
-					break;
-				}
-			}
-			
-			if(target != null) {
-				int dx = target.getX();
-				int dy = target.getY();
+			Optional<EdificioAlmacen> target = hormiguero.getAlmacenes().stream().filter(almacen -> { 
+				return almacen.tieneComida();
+			}).sorted((a, b) -> {
+				double distA = (a.getX()-this.x)*(a.getX()-this.x) + (a.getY()-this.y)*(a.getY()-this.y);
+				double distB = (b.getX()-this.x)*(b.getX()-this.x) + (b.getY()-this.y)*(b.getY()-this.y);
 				
-				edificio = target;
+				return Double.compare(distA, distB);
+			}).findFirst();
+			
+			if(target.isPresent()) {
+				int dx = target.get().getX();
+				int dy = target.get().getY();
+				
+				edificio = target.get();
 				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
 				
 				return;
@@ -149,20 +150,21 @@ public class HormigaObrera extends Hormiga {
 		}
 		
 		if(tickPonchar >= Hormiguero.GANAS_PONCHAR && !ponchando) {
-			EdificioCuna target = null;
-			for(EdificioCuna cuna : hormiguero.getCunas()) {
-				if(cuna.isTerminado() && !cuna.isLleno()) {
-					target = cuna;
-					break;
-				}
-			}
+			Optional<EdificioCuna> target = hormiguero.getCunas().stream().filter(cuna -> { 
+				return cuna.isTerminado() && !cuna.isLleno();
+			}).sorted((a, b) -> {
+				double distA = (a.getX()-this.x)*(a.getX()-this.x) + (a.getY()-this.y)*(a.getY()-this.y);
+				double distB = (b.getX()-this.x)*(b.getX()-this.x) + (b.getY()-this.y)*(b.getY()-this.y);
+				
+				return Double.compare(distA, distB);
+			}).findFirst();
 			
-			if(target != null) {
-				int dx = target.getX();
-				int dy = target.getY();
+			if(target.isPresent()) {
+				int dx = target.get().getX();
+				int dy = target.get().getY();
 				
 				ponchando = true;
-				edificio = target;
+				edificio = target.get();
 				objetivo = Finder.buscar(new int[] {this.x, this.y}, new int[] {dx, dy}, hormiguero.getGrid());
 			}
 			
